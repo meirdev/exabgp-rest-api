@@ -74,6 +74,8 @@ lock = asyncio.Lock()
 
 
 def reload() -> None:
+    # exabgp stops the process and starts it again when it receives a SIGHUP signal
+    # TODO: find a way to disable incoming requests while reloading
     os.kill(os.getpid(), signal.SIGUSR1)
 
 

@@ -1,0 +1,13 @@
+services:
+  exabgp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "179:1790"
+      - "5000:5000"
+    command:
+      - /etc/exabgp/exabgp.conf
+    volumes:
+      - ./exabgp.conf:/etc/exabgp/exabgp.conf
+    restart: always

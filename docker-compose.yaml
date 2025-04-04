@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "179:1790"
+      - "179:179"
       - "5000:5000"
     command:
       - /etc/exabgp/exabgp.conf

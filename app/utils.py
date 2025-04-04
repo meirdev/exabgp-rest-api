@@ -74,7 +74,7 @@ lock = asyncio.Lock()
 
 
 def reload() -> None:
-    os.kill(os.getppid(), signal.SIGUSR1)
+    os.kill(os.getpid(), signal.SIGUSR1)
 
 
 async def send_command(command: str) -> bool:

@@ -107,6 +107,7 @@ class Neighbor(BaseModel):
     local_address: IPvAnyAddress | None = None
     local_as: int | None = None
     peer_as: int | None = None
+    connect: int | None = None
     capability: NeighborCapability | None = None
 
 

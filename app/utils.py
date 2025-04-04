@@ -54,6 +54,10 @@ neighbor {{ neighbor.ip_address }} {
     peer-as {{ neighbor.peer_as }};
     {%- endif %}
 
+    {%- if neighbor.connect is not none %}
+    connect {{ neighbor.connect }};
+    {%- endif %}
+
     {%- if neighbor.capability is not none %}
     capability {
         {%- if neighbor.capability.route_refresh %}

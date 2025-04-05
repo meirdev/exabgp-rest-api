@@ -49,3 +49,23 @@ curl --location --request DELETE 'http://127.0.0.1:5000/neighbors/127.0.0.1/flow
 --header 'Content-Type: application/json' \
 --data '{"match": {"destination": "10.0.0.0/24", "port": "http"}, "then": "discard"}'
 ```
+
+### POST /neighbors/{ip_address}/routes
+
+Announce a route to a neighbor.
+
+```bash
+curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes' \
+--header 'Content-Type: application/json' \
+--data '{"prefix": "10.0.0.0/24", "next_hop": "255.255.255.255", "community": [[64500, 666]]}'
+```
+
+### DELETE /neighbors/{ip_address}/routes
+
+Withdraw a route from a neighbor.
+
+```bash
+curl --location --request DELETE 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes' \
+--header 'Content-Type: application/json' \
+--data '{"prefix": "10.0.0.0/24", "next_hop": "255.255.255.255", "community": [[64500, 666]]}'
+```

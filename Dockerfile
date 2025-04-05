@@ -12,7 +12,6 @@ RUN pip install "fastapi[all]" jinja2
 RUN git clone --single-branch --branch 4.2 https://github.com/Exa-Networks/exabgp /opt/exabgp
 
 COPY app /opt/exabgp/app
-COPY run.sh /opt/exabgp
 
 RUN useradd -r exa \
     && mkdir /etc/exabgp \

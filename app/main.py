@@ -11,6 +11,8 @@ import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Response, status
 from pydantic import IPvAnyAddress
 
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
 from app.dto import Flow, Neighbor, Route
 from app.utils import (
     flow_to_command,

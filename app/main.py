@@ -16,7 +16,6 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from app.dto import Flow, Neighbor, Route
 from app.utils import (
     flow_to_command,
-    reload,
     route_to_command,
     send_command,
     update_config,
@@ -55,7 +54,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
     yield
 
 
-app = FastAPI(root_path="/bgp", lifespan=lifespan)
+app = FastAPI(lifespan=lifespan)
 
 
 @app.post("/command")
@@ -77,7 +76,7 @@ async def add_or_update_neighbor(neighbor: Neighbor, response: Response):
 
         response.status_code = status.HTTP_200_OK
 
-    reload()
+    await send_command("reload")
 
 
 @app.delete("/neighbors/{neighbor}", status_code=status.HTTP_204_NO_CONTENT)
@@ -89,7 +88,7 @@ async def delete_neighbor(neighbor: IPvAnyAddress):
 
     logger.info("Neighbor %s deleted", neighbor)
 
-    reload()
+    await send_command("reload")
 
 
 @app.post("/neighbors/{neighbor}/routes", status_code=status.HTTP_200_OK)

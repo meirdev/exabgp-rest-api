@@ -28,10 +28,13 @@ RUN echo "[exabgp.daemon]" > /opt/exabgp/etc/exabgp/exabgp.env \
 ENV PYTHONPATH=/opt/exabgp/src
 ENV PATH=$PATH:/opt/exabgp/sbin/
 
+COPY ./exabgp.conf /etc/exabgp/exabgp.conf
+
 EXPOSE 179
 EXPOSE 5000
 
-ENTRYPOINT [ \
+CMD [ \
     "/usr/bin/dumb-init", "--", \ 
-    "/opt/exabgp/sbin/exabgp" \
+    "/opt/exabgp/sbin/exabgp", \
+    "/etc/exabgp/exabgp.conf" \
 ]

@@ -9,6 +9,7 @@ from typing import Any, AsyncGenerator
 
 import uvicorn
 from fastapi import Body, FastAPI, HTTPException, Response, status
+from fastapi.responses import JSONResponse
 from pydantic import IPvAnyAddress
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -20,6 +21,10 @@ from app.utils import (
     send_command,
     update_config,
 )
+
+DEFUALT_HOST = "0.0.0.0"
+
+DEFAULT_PORT = 5000
 
 CONFIG_PATH = Path("/etc/exabgp/exabgp.conf")
 
@@ -48,10 +53,37 @@ logger.addHandler(logger_handler)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI) -> AsyncGenerator[None]:
+async def lifespan(_: FastAPI) -> AsyncGenerator[None]:
     logger.info("Hello")
 
     yield
+
+
+async def command_executor(command: str) -> JSONResponse:
+    logger.info("Executing command: %s", command)
+
+    response = await send_command(command)
+
+    logger.info("Command response: %s", response)
+
+    if response == "error":
+        logger.error("Failed to execute command: %s", command)
+
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={
+                "status": "error",
+                "message": "Failed to execute command",
+                "command": command,
+            },
+        )
+
+    logger.info("Command executed successfully: %s", command)
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={"status": "success", "command": command, "response": response},
+    )
 
 
 app = FastAPI(lifespan=lifespan)
@@ -59,8 +91,7 @@ app = FastAPI(lifespan=lifespan)
 
 @app.post("/command")
 async def write_command(command: str = Body(...)):
-    if not await send_command(command):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    return await command_executor(command)
 
 
 @app.post("/neighbors")
@@ -76,10 +107,10 @@ async def add_or_update_neighbor(neighbor: Neighbor, response: Response):
 
         response.status_code = status.HTTP_200_OK
 
-    await send_command("reload")
+    return await command_executor("reload")
 
 
-@app.delete("/neighbors/{neighbor}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/neighbors/{neighbor}")
 async def delete_neighbor(neighbor: IPvAnyAddress):
     exists = update_config(CONFIG_PATH, neighbor, None)
 
@@ -88,39 +119,35 @@ async def delete_neighbor(neighbor: IPvAnyAddress):
 
     logger.info("Neighbor %s deleted", neighbor)
 
-    await send_command("reload")
+    return await command_executor("reload")
 
 
-@app.post("/neighbors/{neighbor}/routes", status_code=status.HTTP_200_OK)
-async def add_route(neighbor: IPvAnyAddress, route: Route):
+@app.post("/neighbors/{neighbor}/routes/announce")
+async def announce_route(neighbor: IPvAnyAddress, route: Route):
     command = route_to_command(neighbor, "announce", route)
 
-    if not await send_command(command):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    await command_executor(command)
 
 
-@app.delete("/neighbors/{neighbor}/routes", status_code=status.HTTP_200_OK)
-async def delete_route(neighbor: IPvAnyAddress, route: Route):
+@app.post("/neighbors/{neighbor}/routes/withdraw")
+async def withdraw_route(neighbor: IPvAnyAddress, route: Route):
     command = route_to_command(neighbor, "withdraw", route)
 
-    if not await send_command(command):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    return await command_executor(command)
 
 
-@app.post("/neighbors/{neighbor}/flows", status_code=status.HTTP_204_NO_CONTENT)
-async def add_flow(neighbor: IPvAnyAddress, flow: Flow):
+@app.post("/neighbors/{neighbor}/flows/announce")
+async def announce_flow(neighbor: IPvAnyAddress, flow: Flow):
     command = flow_to_command(neighbor, "announce", flow)
 
-    if not await send_command(command):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    return await command_executor(command)
 
 
-@app.delete("/neighbors/{neighbor}/flows", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_flow(neighbor: IPvAnyAddress, flow: Flow):
+@app.post("/neighbors/{neighbor}/flows/withdraw")
+async def withdraw_flow(neighbor: IPvAnyAddress, flow: Flow):
     command = flow_to_command(neighbor, "withdraw", flow)
 
-    if not await send_command(command):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+    return await command_executor(command)
 
 
 if __name__ == "__main__":
@@ -128,13 +155,13 @@ if __name__ == "__main__":
     arg_parser.add_argument(
         "--host",
         type=str,
-        default="0.0.0.0",
+        default=DEFUALT_HOST,
         help="Host to bind the server to",
     )
     arg_parser.add_argument(
         "--port",
         type=int,
-        default=5000,
+        default=DEFAULT_PORT,
         help="Port to bind the server to",
     )
 

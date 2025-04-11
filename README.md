@@ -30,42 +30,42 @@ Delete a neighbor.
 curl --location --request DELETE 'http://127.0.0.1:5000/neighbors/127.0.0.1'
 ```
 
-### POST /neighbors/{ip_address}/flows
+### POST /neighbors/{ip_address}/flows/announce
 
 Announce a flow to a neighbor.
 
 ```bash
-curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/flows' \
+curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/flows/announce' \
 --header 'Content-Type: application/json' \
 --data '{"match": {"destination": "10.0.0.0/24", "port": "http"}, "then": "discard"}'
 ```
 
-### DELETE /neighbors/{ip_address}/flows
+### POST /neighbors/{ip_address}/flows/withdraw
 
 Withdraw a flow from a neighbor.
 
 ```bash
-curl --location --request DELETE 'http://127.0.0.1:5000/neighbors/127.0.0.1/flows' \
+curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/flows/withdraw' \
 --header 'Content-Type: application/json' \
 --data '{"match": {"destination": "10.0.0.0/24", "port": "http"}, "then": "discard"}'
 ```
 
-### POST /neighbors/{ip_address}/routes
+### POST /neighbors/{ip_address}/routes/announce
 
 Announce a route to a neighbor.
 
 ```bash
-curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes' \
+curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes/announce' \
 --header 'Content-Type: application/json' \
 --data '{"prefix": "10.0.0.0/24", "next_hop": "255.255.255.255", "community": [[64500, 666]]}'
 ```
 
-### DELETE /neighbors/{ip_address}/routes
+### POST /neighbors/{ip_address}/routes/withdraw
 
 Withdraw a route from a neighbor.
 
 ```bash
-curl --location --request DELETE 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes' \
+curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes/withdraw' \
 --header 'Content-Type: application/json' \
 --data '{"prefix": "10.0.0.0/24", "next_hop": "255.255.255.255", "community": [[64500, 666]]}'
 ```

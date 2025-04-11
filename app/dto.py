@@ -1,8 +1,8 @@
-from typing import Annotated, Literal
+from typing import Literal
 
-from pydantic import AfterValidator, BaseModel, IPvAnyAddress, IPvAnyNetwork
+from pydantic import BaseModel, IPvAnyAddress, IPvAnyNetwork, conint
 
-type Port = Annotated[int, AfterValidator(lambda v: 0 <= v <= 65535)]
+type Port = conint(ge=0, le=65535)  # type: ignore
 
 type Protocol = Literal[
     "icmp",

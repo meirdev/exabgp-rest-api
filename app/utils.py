@@ -71,16 +71,14 @@ neighbor {{ neighbor.ip_address }} {
 lock = asyncio.Lock()
 
 
-async def send_command(command: str) -> bool:
+async def send_command(command: str) -> str:
     async with lock:
         sys.stdin.flush()
 
         sys.stdout.write(f"{command}\n")
         sys.stdout.flush()
 
-        result = sys.stdin.readline().strip()
-
-        return result == "done"
+        return sys.stdin.readline().strip()
 
 
 def update_config(

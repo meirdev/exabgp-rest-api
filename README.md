@@ -12,7 +12,7 @@ docker-compose up -d
 
 ## Endpoints
 
-### POST /neighbors
+`POST /neighbors`
 
 Add a new neighbor.
 
@@ -22,7 +22,7 @@ curl --location 'http://127.0.0.1:5000/neighbors' \
 --data '{"ip_address": "127.0.0.1", "router_id": "1.1.1.1", "local_address": "127.0.0.1", "local_as": 65001, "peer_as": 65010, "connect": 1000, "capability":{"route_refresh": true}}'
 ```
 
-### DELETE /neighbors/{ip_address}
+`DELETE /neighbors/{ip_address}`
 
 Delete a neighbor.
 
@@ -30,7 +30,7 @@ Delete a neighbor.
 curl --location --request DELETE 'http://127.0.0.1:5000/neighbors/127.0.0.1'
 ```
 
-### POST /neighbors/{ip_address}/flows/announce
+`POST /neighbors/{ip_address}/flows/announce`
 
 Announce a flow to a neighbor.
 
@@ -40,7 +40,7 @@ curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/flows/announce' \
 --data '{"match": {"destination": "10.0.0.0/24", "port": "http"}, "then": "discard"}'
 ```
 
-### POST /neighbors/{ip_address}/flows/withdraw
+`POST /neighbors/{ip_address}/flows/withdraw`
 
 Withdraw a flow from a neighbor.
 
@@ -50,7 +50,7 @@ curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/flows/withdraw' \
 --data '{"match": {"destination": "10.0.0.0/24", "port": "http"}, "then": "discard"}'
 ```
 
-### POST /neighbors/{ip_address}/routes/announce
+`POST /neighbors/{ip_address}/routes/announce`
 
 Announce a route to a neighbor.
 
@@ -60,7 +60,7 @@ curl --location 'http://127.0.0.1:5000/neighbors/127.0.0.1/routes/announce' \
 --data '{"prefix": "10.0.0.0/24", "next_hop": "255.255.255.255", "community": [[64500, 666]]}'
 ```
 
-### POST /neighbors/{ip_address}/routes/withdraw
+`POST /neighbors/{ip_address}/routes/withdraw`
 
 Withdraw a route from a neighbor.
 

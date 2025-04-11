@@ -1,5 +1,7 @@
 # ExaBGP REST API
 
+[![Docker Image CI](https://github.com/meirdev/exabgp-rest-api/actions/workflows/docker-image.yml/badge.svg)](https://github.com/meirdev/exabgp-rest-api/actions/workflows/docker-image.yml)
+
 This is a simple REST API for ExaBGP. It allows you to interact with ExaBGP using HTTP requests.
 
 ## Usage
@@ -8,6 +10,12 @@ Use `docker-compose` to start the ExaBGP container and the REST API container.
 
 ```bash
 docker-compose up -d
+```
+
+or:
+
+```bash
+docker run -d -p 5000:5000 -p 179:179 -v ./exabgp.conf:/etc/exabgp/exabgp.conf --name exabgp-rest-api meirdev/exabgp-rest-api /etc/exabgp/exabgp.conf
 ```
 
 ## Endpoints

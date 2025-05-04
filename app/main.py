@@ -2,6 +2,7 @@
 
 import argparse
 import logging
+import os
 import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -22,9 +23,9 @@ from app.utils import (
     update_config,
 )
 
-DEFUALT_HOST = "0.0.0.0"
+DEFUALT_HOST = os.getenv("HOST", "0.0.0.0")
 
-DEFAULT_PORT = 5000
+DEFAULT_PORT = os.getenv("PORT", 5000)
 
 CONFIG_PATH = Path("/etc/exabgp/exabgp.conf")
 

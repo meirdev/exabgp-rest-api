@@ -123,6 +123,7 @@ class FlowMatch(BaseModel):
     icmp_code: AnyStr[IcmpCode] | None = None
     fragment: AnyStr[Fragment] | None = None
     packet_length: AnyStr[int] | None = None
+    dscp: AnyStr[int] | None = None
 
 
 class FlowRateLimit(BaseModel):

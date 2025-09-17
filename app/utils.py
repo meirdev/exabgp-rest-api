@@ -127,6 +127,7 @@ def flow_to_command(
         ("icmp-code", flow.match.icmp_code),
         ("fragment", flow.match.fragment),
         ("packet-length", flow.match.packet_length),
+        ("dscp", flow.match.dscp),
     ):
         if v is not None:
             command.extend([k, str(v)])

@@ -4,6 +4,8 @@ from pydantic import BaseModel, IPvAnyAddress, IPvAnyNetwork, conint
 
 type Port = conint(ge=0, le=65535)  # type: ignore
 
+type UnsignedInt = conint(ge=0)  # type: ignore
+
 type Protocol = Literal[
     "icmp",
     "igmp",
@@ -122,12 +124,12 @@ class FlowMatch(BaseModel):
     icmp_type: AnyStr[IcmpType] | None = None
     icmp_code: AnyStr[IcmpCode] | None = None
     fragment: AnyStr[Fragment] | None = None
-    packet_length: AnyStr[int] | None = None
-    dscp: AnyStr[int] | None = None
+    packet_length: AnyStr[UnsignedInt] | None = None
+    dscp: AnyStr[UnsignedInt] | None = None
 
 
 class FlowRateLimit(BaseModel):
-    rate_limit: int
+    rate_limit: UnsignedInt
 
 
 class Flow(BaseModel):

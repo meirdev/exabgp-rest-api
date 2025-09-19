@@ -125,6 +125,8 @@ async def delete_neighbor(neighbor: IPvAnyAddress):
 
 @app.post("/neighbors/{neighbor}/routes/announce")
 async def announce_route(neighbor: IPvAnyAddress, route: Route):
+    logger.info("Announcing route: %s to neighbor: %s", route, neighbor)
+
     command = route_to_command(neighbor, "announce", route)
 
     return await command_executor(command)
@@ -132,6 +134,8 @@ async def announce_route(neighbor: IPvAnyAddress, route: Route):
 
 @app.post("/neighbors/{neighbor}/routes/withdraw")
 async def withdraw_route(neighbor: IPvAnyAddress, route: Route):
+    logger.info("Withdrawing route: %s from neighbor: %s", route, neighbor)
+
     command = route_to_command(neighbor, "withdraw", route)
 
     return await command_executor(command)
@@ -139,6 +143,8 @@ async def withdraw_route(neighbor: IPvAnyAddress, route: Route):
 
 @app.post("/neighbors/{neighbor}/flows/announce")
 async def announce_flow(neighbor: IPvAnyAddress, flow: Flow):
+    logger.info("Announcing flow: %s to neighbor: %s", flow, neighbor)
+
     command = flow_to_command(neighbor, "announce", flow)
 
     return await command_executor(command)
@@ -146,6 +152,8 @@ async def announce_flow(neighbor: IPvAnyAddress, flow: Flow):
 
 @app.post("/neighbors/{neighbor}/flows/withdraw")
 async def withdraw_flow(neighbor: IPvAnyAddress, flow: Flow):
+    logger.info("Withdrawing flow: %s from neighbor: %s", flow, neighbor)
+
     command = flow_to_command(neighbor, "withdraw", flow)
 
     return await command_executor(command)

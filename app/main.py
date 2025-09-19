@@ -127,7 +127,7 @@ async def delete_neighbor(neighbor: IPvAnyAddress):
 async def announce_route(neighbor: IPvAnyAddress, route: Route):
     command = route_to_command(neighbor, "announce", route)
 
-    await command_executor(command)
+    return await command_executor(command)
 
 
 @app.post("/neighbors/{neighbor}/routes/withdraw")

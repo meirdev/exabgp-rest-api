@@ -29,6 +29,8 @@ ENV PYTHONPATH=/opt/exabgp/src
 ENV PATH=$PATH:/opt/exabgp/sbin/
 
 COPY ./exabgp.conf /etc/exabgp/exabgp.conf
+RUN chown exa /etc/exabgp/exabgp.conf
+RUN chmod 644 /etc/exabgp/exabgp.conf
 
 EXPOSE 179
 EXPOSE 5000
